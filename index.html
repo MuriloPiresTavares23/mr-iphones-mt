@@ -1,32 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MR iPhones MT - Catálogo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Painel Administrativo - MR iPhones MT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #1ebe5d;
+    }
+
+    #preview {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>MR iPhones MT</h1>
-    <p>Seu iPhone com confiança e garantia</p>
-  </header>
 
-  <nav>
-    <a href="#">iPhones</a>
-    <a href="#">iPads</a>
-    <a href="#">MacBooks</a>
-    <a href="#">Xiaomi</a>
-    <a href="#">Caixa de som JBL</a>
-  </nav>
+<header>
+  <h1>Painel Administrativo</h1>
+  <p>Adicionar novo produto</p>
+</header>
 
-  <div class="container" id="catalogo-container">
-    <!-- Os cards de produtos serão inseridos aqui via JavaScript -->
-  </div>
+<div class="container">
+  <h2>Novo Produto</h2>
 
-  <script src="produtos.js"></script>
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" placeholder="Ex: iPhone 13">
+
+  <label for="descricao">Descrição:</label>
+  <textarea id="descricao" placeholder="Ex: 128GB - Novo, Entrega em até 1 dia útil"></textarea>
+
+  <label for="imagem">Imagem:</label>
+  <input type="file" id="imagem" accept="image/*">
+  <img id="preview" src="#">
+
+  <label for="whatsapp">Mensagem para o WhatsApp:</label>
+  <input type="text" id="whatsapp" placeholder="Ex: Olá! Tenho interesse no iPhone 13.">
+
+  <button onclick="adicionarProduto()">Adicionar ao Catálogo</button>
+</div>
+
+<script src="produtos.js"></script>
 </body>
 </html>
+
