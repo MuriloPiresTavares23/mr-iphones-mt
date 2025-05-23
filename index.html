@@ -1,20 +1,37 @@
 
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel Administrativo - MR iPhones MT</title>
+  <meta charset="UTF-8">
+  <title>Painel Administrativo - MR iPhones</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, textarea, button { margin: 10px 0; display: block; width: 100%; max-width: 400px; }
+  </style>
 </head>
 <body>
-  <h1>Painel Administrativo</h1>
-  <form id="formProduto">
-    <input type="text" id="nome" placeholder="Nome do produto" required />
-    <input type="text" id="preco" placeholder="Preço" required />
-    <input type="text" id="imagem" placeholder="URL da imagem" required />
-    <input type="text" id="whatsapp" placeholder="Link do WhatsApp" required />
-    <button type="submit">Adicionar Produto</button>
-  </form>
+  <h1>Painel Administrativo - MR iPhones</h1>
+  <input type="text" id="nome" placeholder="Nome do Produto">
+  <input type="text" id="preco" placeholder="Preço">
+  <input type="text" id="imagem" placeholder="URL da Imagem">
+  <input type="text" id="link" placeholder="Link do WhatsApp">
+  <button onclick="adicionarProduto()">Adicionar Produto</button>
   <script src="produtos.js"></script>
+  <script>
+    function adicionarProduto() {
+      const nome = document.getElementById('nome').value;
+      const preco = document.getElementById('preco').value;
+      const imagem = document.getElementById('imagem').value;
+      const link = document.getElementById('link').value;
+
+      const novoProduto = { nome, imagem, link };
+      const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
+      produtos.push(novoProduto);
+      localStorage.setItem('produtos', JSON.stringify(produtos));
+      alert('Produto adicionado com sucesso!');
+      location.reload();
+    }
+  </script>
 </body>
 </html>
