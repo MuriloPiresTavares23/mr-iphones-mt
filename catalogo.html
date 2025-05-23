@@ -48,6 +48,12 @@
       border-radius: 5px;
       text-decoration: none;
     }
+    .product img {
+      max-width: 150px;
+      border-radius: 10px;
+      display: block;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -55,20 +61,31 @@
     <h1>MR iPhones MT</h1>
     <p>Seu iPhone com confiança e garantia</p>
   </header>
-  <div class="container">
-    <div class="product">
-      <h2>iPhone 13</h2>
-      <p>128GB - Seminovo</p>
-      <p>Entrega em até 1 dia útil</p>
-      <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=Olá!%20Tenho%20interesse%20no%20iPhone%2013.%20Pode%20me%20passar%20mais%20informações?" target="_blank">Falar no WhatsApp</a>
-    </div>
-
-    <div class="product">
-      <h2>iPhone 11</h2>
-      <p>64GB - Novo</p>
-      <p>Entrega rápida em Conquista d'Oeste</p>
-      <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=Olá!%20Vi%20o%20iPhone%2011%20no%20site.%20Pode%20me%20informar%20mais%20detalhes?" target="_blank">Falar no WhatsApp</a>
-    </div>
+  <div class="container" id="produtos-container">
+    <!-- Os produtos serão inseridos aqui pelo JavaScript -->
   </div>
+
+  <script>
+    const container = document.getElementById('produtos-container');
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+    if (produtos.length === 0) {
+      container.innerHTML = "<p>Nenhum produto disponível no momento.</p>";
+    } else {
+      produtos.forEach(produto => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `
+          <img src="${produto.imagem}" alt="${produto.nome}">
+          <h2>${produto.nome}</h2>
+          <p>${produto.descricao}</p>
+          <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(produto.mensagem)}" target="_blank">
+            Falar no WhatsApp
+          </a>
+        `;
+        container.appendChild(div);
+      });
+    }
+  </script>
 </body>
 </html>
