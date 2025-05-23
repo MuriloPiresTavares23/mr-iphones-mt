@@ -1,16 +1,30 @@
-const produtos = [
-  { nome: "iPhone 14 - Preto", whatsapp: "https://wa.me/5565998032449?text=Ol%C3%A1%2C%20tenho%20interesse%20no%20iPhone%2014%20Preto.%20Poderia%20me%20passar%20mais%20informa%C3%A7%C3%B5es%3F" },
-  // Adicione mais produtos aqui no mesmo formato
-];
+function adicionarProduto() {
+  const nome = document.getElementById('nome').value.trim();
+  const descricao = document.getElementById('descricao').value.trim();
+  const imagem = document.getElementById('imagem').files[0];
+  const mensagem = document.getElementById('whatsapp').value.trim();
 
-const container = document.getElementById("catalogo-container");
+  if (!nome || !descricao || !imagem || !mensagem) {
+    alert('Por favor, preencha todos os campos e selecione uma imagem.');
+    return;
+  }
 
-produtos.forEach(produto => {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
-    <h3>${produto.nome}</h3>
-    <a class="btn" href="${produto.whatsapp}" target="_blank">Chamar no WhatsApp</a>
-  `;
-  container.appendChild(card);
-});
+  const leitor = new FileReader();
+  leitor.onload = function (e) {
+    const produto = {
+      nome,
+      descricao,
+      imagem: e.target.result, // base64
+      mensagem
+    };
+
+    let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    produtos.push(produto);
+    localStorage.setItem('produtos', JSON.stringify(produtos));
+
+    alert('Produto adicionado com sucesso!');
+    window.location.reload();
+  };
+
+  leitor.readAsDataURL(imagem);
+}
