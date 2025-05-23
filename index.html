@@ -1,36 +1,33 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel Administrativo - MR iPhones</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, textarea, button { margin: 10px 0; display: block; width: 100%; max-width: 400px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MR iPhones MT - Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Painel Administrativo - MR iPhones</h1>
-  <input type="text" id="nome" placeholder="Nome do Produto">
-  <input type="text" id="preco" placeholder="Preço">
-  <input type="text" id="imagem" placeholder="URL da Imagem">
-  <input type="text" id="link" placeholder="Link do WhatsApp">
-  <button onclick="adicionarProduto()">Adicionar Produto</button>
-  <script src="produtos.js"></script>
-  <script>
-    function adicionarProduto() {
-      const nome = document.getElementById('nome').value;
-      const preco = document.getElementById('preco').value;
-      const imagem = document.getElementById('imagem').value;
-      const link = document.getElementById('link').value;
+  <header>
+    <h1>MR iPhones MT</h1>
+    <p>Seu iPhone com confiança e garantia</p>
+  </header>
 
-      const novoProduto = { nome, preco, imagem, link };
-      const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
-      produtos.push(novoProduto);
-      localStorage.setItem('produtos', JSON.stringify(produtos));
-      alert('Produto adicionado com sucesso!');
-      location.reload();
-    }
-  </script>
+  <nav>
+    <a href="#">iPhones</a>
+    <a href="#">iPads</a>
+    <a href="#">MacBooks</a>
+    <a href="#">Xiaomi</a>
+    <a href="#">Caixa de som JBL</a>
+  </nav>
+
+  <div class="container" id="catalogo-container">
+    <!-- Os cards de produtos serão inseridos aqui via JavaScript -->
+  </div>
+
+  <script src="produtos.js"></script>
 </body>
 </html>
+
