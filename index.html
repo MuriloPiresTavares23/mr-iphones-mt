@@ -1,4 +1,3 @@
-
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -25,7 +24,7 @@
       const imagem = document.getElementById('imagem').value;
       const link = document.getElementById('link').value;
 
-      const novoProduto = { nome, imagem, link };
+      const novoProduto = { nome, preco, imagem, link };
       const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
       produtos.push(novoProduto);
       localStorage.setItem('produtos', JSON.stringify(produtos));
