@@ -18,6 +18,24 @@
       padding: 20px;
       text-align: center;
     }
+    .categories {
+      background-color: #111;
+      padding: 10px 0;
+      text-align: center;
+    }
+    .categories button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .categories button:hover {
+      background-color: #25D366;
+    }
     .container {
       max-width: 960px;
       margin: 20px auto;
@@ -61,6 +79,15 @@
     <h1>MR iPhones MT</h1>
     <p>Seu iPhone com confiança e garantia</p>
   </header>
+
+  <div class="categories">
+    <button>iPhone</button>
+    <button>iPad</button>
+    <button>MacBook</button>
+    <button>Caixa de som JBL</button>
+    <button>Starlink</button>
+  </div>
+
   <div class="container" id="produtos-container">
     <!-- Os produtos serão inseridos aqui pelo JavaScript -->
   </div>
