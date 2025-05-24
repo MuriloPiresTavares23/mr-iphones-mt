@@ -1,30 +1,94 @@
+// Firebase Configuração
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_DOMINIO.firebaseapp.com",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_BUCKET.appspot.com",
+  messagingSenderId: "SEU_ID",
+  appId: "SUA_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+// Adicionar Produto
 function adicionarProduto() {
   const nome = document.getElementById('nome').value.trim();
   const descricao = document.getElementById('descricao').value.trim();
-  const imagem = document.getElementById('imagem').files[0];
-  const mensagem = document.getElementById('whatsapp').value.trim();
+  const imagemInput = document.getElementById('imagem');
+  const mensagem = document.getElementById('mensagem').value.trim();
+  const categoria = document.getElementById('categoria').value;
 
-  if (!nome || !descricao || !imagem || !mensagem) {
-    alert('Por favor, preencha todos os campos e selecione uma imagem.');
+  if (!nome || !descricao || !imagemInput.files[0] || !mensagem || !categoria) {
+    alert("Preencha todos os campos.");
     return;
   }
 
-  const leitor = new FileReader();
-  leitor.onload = function (e) {
-    const produto = {
-      nome,
-      descricao,
-      imagem: e.target.result, // base64
-      mensagem
-    };
+  const imagemFile = imagemInput.files[0];
+  const storageRef = storage.ref(`produtos/${Date.now()}_${imagemFile.name}`);
+  const uploadTask = storageRef.put(imagemFile);
 
-    let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-    produtos.push(produto);
-    localStorage.setItem('produtos', JSON.stringify(produtos));
+  uploadTask.then(snapshot => snapshot.ref.getDownloadURL())
+    .then(url => {
+      return db.collection("produtos").add({
+        nome,
+        descricao,
+        imagem: url,
+        mensagem,
+        categoria
+      });
+    })
+    .then(() => {
+      alert("Produto adicionado com sucesso!");
+      limparFormulario();
+      carregarProdutos(); // se quiser recarregar a listagem no painel
+    })
+    .catch(error => {
+      console.error("Erro ao adicionar produto: ", error);
+      alert("Erro ao adicionar produto.");
+    });
+}
 
-    alert('Produto adicionado com sucesso!');
-    window.location.reload();
-  };
+// Carregar produtos para catálogo
+function carregarProdutos(categoria = null, containerId = 'produtos-container') {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "<p>Carregando produtos...</p>";
 
-  leitor.readAsDataURL(imagem);
+  let query = db.collection("produtos");
+  if (categoria) {
+    query = query.where("categoria", "==", categoria);
+  }
+
+  query.get().then(snapshot => {
+    container.innerHTML = "";
+    if (snapshot.empty) {
+      container.innerHTML = "<p>Nenhum produto disponível.</p>";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.innerHTML = `
+        <img src="${p.imagem}" alt="${p.nome}" style="max-width: 150px; border-radius: 10px;">
+        <h2>${p.nome}</h2>
+        <p>${p.descricao}</p>
+        <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(p.mensagem)}" target="_blank">
+          Falar no WhatsApp
+        </a>
+      `;
+      container.appendChild(div);
+    });
+  });
+}
+
+// Limpar formulário
+function limparFormulario() {
+  document.getElementById('nome').value = '';
+  document.getElementById('descricao').value = '';
+  document.getElementById('imagem').value = '';
+  document.getElementById('mensagem').value = '';
+  document.getElementById('categoria').value = 'iPhone';
 }
