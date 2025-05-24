@@ -37,7 +37,7 @@
       margin: 10px 0 5px;
     }
 
-    input, textarea, button {
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -66,6 +66,8 @@
       display: none;
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -83,17 +85,67 @@
   <label for="descricao">Descrição:</label>
   <textarea id="descricao" placeholder="Ex: 128GB - Novo, Entrega em até 1 dia útil"></textarea>
 
-  <label for="imagem">Imagem:</label>
-  <input type="file" id="imagem" accept="image/*">
-  <img id="preview" src="#">
+  <label for="imagem">URL da Imagem:</label>
+  <input type="text" id="imagem" placeholder="https://exemplo.com/imagem.jpg">
 
-  <label for="whatsapp">Mensagem para o WhatsApp:</label>
-  <input type="text" id="whatsapp" placeholder="Ex: Olá! Tenho interesse no iPhone 13.">
+  <label for="mensagem">Mensagem para o WhatsApp:</label>
+  <input type="text" id="mensagem" placeholder="Ex: Olá! Tenho interesse no iPhone 13.">
+
+  <label for="categoria">Categoria:</label>
+  <select id="categoria">
+    <option value="iPhone">iPhone</option>
+    <option value="iPad">iPad</option>
+    <option value="MacBook">MacBook</option>
+    <option value="Caixa de som JBL">Caixa de som JBL</option>
+    <option value="Starlink">Starlink</option>
+  </select>
 
   <button onclick="adicionarProduto()">Adicionar ao Catálogo</button>
 </div>
 
-<script src="produtos.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_DOMINIO.firebaseapp.com",
+    projectId: "SEU_PROJECT_ID",
+    storageBucket: "SEU_BUCKET.appspot.com",
+    messagingSenderId: "SEU_ID",
+    appId: "SUA_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  function adicionarProduto() {
+    const nome = document.getElementById('nome').value;
+    const descricao = document.getElementById('descricao').value;
+    const imagem = document.getElementById('imagem').value;
+    const mensagem = document.getElementById('mensagem').value;
+    const categoria = document.getElementById('categoria').value;
+
+    if (!nome || !descricao || !imagem || !mensagem || !categoria) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+
+    db.collection("produtos").add({
+      nome,
+      descricao,
+      imagem,
+      mensagem,
+      categoria
+    }).then(() => {
+      alert("Produto adicionado com sucesso!");
+      document.getElementById('nome').value = '';
+      document.getElementById('descricao').value = '';
+      document.getElementById('imagem').value = '';
+      document.getElementById('mensagem').value = '';
+      document.getElementById('categoria').value = 'iPhone';
+    }).catch((error) => {
+      console.error("Erro ao adicionar produto: ", error);
+    });
+  }
+</script>
+
 </body>
 </html>
-
