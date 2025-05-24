@@ -1,139 +1,118 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>MR iPhones MT</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel Administrativo - MR iPhones MT</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
+      background-color: #f0f2f5;
       margin: 0;
-      padding: 0;
     }
-
     header {
       background-color: #000;
       color: #fff;
       padding: 20px;
       text-align: center;
     }
-
-    nav {
+    .tabs {
+      display: flex;
+      justify-content: center;
       background-color: #222;
-      padding: 10px;
-      text-align: center;
     }
-
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
+    .tab {
+      padding: 15px 30px;
+      cursor: pointer;
+      color: white;
+    }
+    .tab.active {
+      background-color: #444;
       font-weight: bold;
     }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    .formulario {
-      max-width: 960px;
+    .container {
+      max-width: 800px;
       margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
+      background: white;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-
-    .formulario input, .formulario textarea, .formulario select {
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 5px;
     }
-
-    .formulario button {
+    button {
       background-color: #25D366;
-      color: #fff;
-      padding: 10px;
+      color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
       cursor: pointer;
     }
-
-    .container {
-      max-width: 960px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    button:hover {
+      background-color: #1ebe5d;
     }
-
-    .product {
-      border-bottom: 1px solid #ccc;
-      padding: 20px 0;
+    #preview {
+      max-height: 200px;
+      margin-bottom: 15px;
+      display: none;
     }
-
-    .product:last-child {
+    .product-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .product-item:last-child {
       border-bottom: none;
     }
-
-    .product h2 {
-      margin: 0 0 10px;
-    }
-
-    .product p {
-      margin: 5px 0;
-    }
-
-    .whatsapp-btn {
-      display: inline-block;
-      margin-top: 10px;
-      background-color: #25D366;
-      color: #fff;
-      padding: 10px 15px;
+    .product-item img {
+      max-width: 100px;
       border-radius: 5px;
-      text-decoration: none;
     }
-
-    .product img {
-      max-width: 150px;
-      border-radius: 10px;
-      display: block;
-      margin-bottom: 10px;
+    .product-controls {
+      margin-top: 10px;
+    }
+    .product-controls button {
+      margin-right: 10px;
+      background-color: #ff4d4d;
+    }
+    .product-controls button.edit {
+      background-color: #007bff;
     }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
 <header>
-  <h1>MR iPhones MT</h1>
-  <p>Seu iPhone com confiança e garantia</p>
+  <h1>Painel Administrativo</h1>
 </header>
 
-<nav>
-  <a href="#" onclick="filtrarCategoria('iPhone')">iPhone</a>
-  <a href="#" onclick="filtrarCategoria('iPad')">iPad</a>
-  <a href="#" onclick="filtrarCategoria('MacBook')">MacBook</a>
-  <a href="#" onclick="filtrarCategoria('Caixa de som JBL')">Caixa de som JBL</a>
-  <a href="#" onclick="filtrarCategoria('Starlink')">Starlink</a>
-</nav>
+<div class="tabs">
+  <div class="tab active" onclick="mostrarAba('adicionar')">Adicionar Produto</div>
+  <div class="tab" onclick="mostrarAba('gerenciar')">Gerenciar Produtos</div>
+</div>
 
-<div class="formulario">
-  <h2>Adicionar Produto</h2>
-  <input type="text" id="nome" placeholder="Nome do produto">
-  <textarea id="descricao" placeholder="Descrição do produto"></textarea>
-  <input type="file" id="imagemInput" accept="image/*">
-  <input type="text" id="mensagem" placeholder="Mensagem para o WhatsApp">
+<div class="container" id="adicionar">
+  <h2>Novo Produto</h2>
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" />
+
+  <label for="descricao">Descrição:</label>
+  <textarea id="descricao"></textarea>
+
+  <label for="imagem">URL da Imagem:</label>
+  <input type="text" id="imagem" oninput="mostrarPreview()" />
+  <img id="preview" />
+
+  <label for="mensagem">Mensagem para o WhatsApp:</label>
+  <input type="text" id="mensagem" />
+
+  <label for="categoria">Categoria:</label>
   <select id="categoria">
     <option value="iPhone">iPhone</option>
     <option value="iPad">iPad</option>
@@ -141,94 +120,43 @@
     <option value="Caixa de som JBL">Caixa de som JBL</option>
     <option value="Starlink">Starlink</option>
   </select>
-  <button onclick="adicionarProduto()">Salvar Produto</button>
+
+  <button onclick="salvarProduto()">Salvar Produto</button>
 </div>
 
-<div class="container" id="produtos-container">
-  <p>Carregando produtos...</p>
+<div class="container" id="gerenciar" style="display:none">
+  <h2>Gerenciar Produtos</h2>
+  <div id="lista-produtos"></div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="produtos.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_DOMINIO.firebaseapp.com",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_BUCKET.appspot.com",
-    messagingSenderId: "SEU_ID",
-    appId: "SUA_APP_ID"
-  };
+  function mostrarAba(aba) {
+    document.getElementById('adicionar').style.display = aba === 'adicionar' ? 'block' : 'none';
+    document.getElementById('gerenciar').style.display = aba === 'gerenciar' ? 'block' : 'none';
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const storage = firebase.storage();
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelector(`.tab:nth-child(${aba === 'adicionar' ? 1 : 2})`).classList.add('active');
 
-  const container = document.getElementById('produtos-container');
-
-  function carregarProdutos(categoria = null) {
-    container.innerHTML = "<p>Carregando produtos...</p>";
-    let query = db.collection("produtos");
-    if (categoria) {
-      query = query.where("categoria", "==", categoria);
+    if (aba === 'gerenciar') {
+      listarProdutos();
     }
-
-    query.get().then(snapshot => {
-      container.innerHTML = "";
-      if (snapshot.empty) {
-        container.innerHTML = "<p>Nenhum produto disponível no momento.</p>";
-      } else {
-        snapshot.forEach(doc => {
-          const produto = doc.data();
-          const div = document.createElement("div");
-          div.className = "product";
-          div.innerHTML = `
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h2>${produto.nome}</h2>
-            <p>${produto.descricao}</p>
-            <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(produto.mensagem)}" target="_blank">Falar no WhatsApp</a>
-          `;
-          container.appendChild(div);
-        });
-      }
-    });
   }
 
-  function adicionarProduto() {
-    const nome = document.getElementById("nome").value;
-    const descricao = document.getElementById("descricao").value;
-    const imagem = document.getElementById("imagemInput").files[0];
-    const mensagem = document.getElementById("mensagem").value;
-    const categoria = document.getElementById("categoria").value;
-
-    if (!nome || !descricao || !imagem || !mensagem || !categoria) {
-      alert("Preencha todos os campos.");
-      return;
+  function mostrarPreview() {
+    const url = document.getElementById('imagem').value;
+    const preview = document.getElementById('preview');
+    if (url) {
+      preview.src = url;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
     }
-
-    const storageRef = storage.ref(`produtos/${imagem.name}`);
-    storageRef.put(imagem).then(snapshot => {
-      return snapshot.ref.getDownloadURL();
-    }).then(url => {
-      return db.collection("produtos").add({
-        nome,
-        descricao,
-        imagem: url,
-        mensagem,
-        categoria
-      });
-    }).then(() => {
-      alert("Produto adicionado com sucesso!");
-      carregarProdutos();
-    }).catch(error => {
-      console.error("Erro ao adicionar produto:", error);
-    });
   }
-
-  function filtrarCategoria(categoria) {
-    carregarProdutos(categoria);
-  }
-
-  carregarProdutos();
 </script>
 
 </body>
 </html>
+
