@@ -18,23 +18,19 @@
       padding: 20px;
       text-align: center;
     }
-    .categories {
-      background-color: #111;
-      padding: 10px 0;
+    nav {
+      background-color: #222;
+      padding: 10px;
       text-align: center;
     }
-    .categories button {
-      background-color: #333;
+    nav a {
       color: #fff;
-      border: none;
-      padding: 10px 15px;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
     }
-    .categories button:hover {
-      background-color: #25D366;
+    nav a:hover {
+      text-decoration: underline;
     }
     .container {
       max-width: 960px;
@@ -73,6 +69,9 @@
       margin-bottom: 10px;
     }
   </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <header>
@@ -80,39 +79,68 @@
     <p>Seu iPhone com confiança e garantia</p>
   </header>
 
-  <div class="categories">
-    <button>iPhone</button>
-    <button>iPad</button>
-    <button>MacBook</button>
-    <button>Caixa de som JBL</button>
-    <button>Starlink</button>
-  </div>
+  <nav>
+    <a href="#" onclick="filtrarCategoria('iPhone')">iPhone</a>
+    <a href="#" onclick="filtrarCategoria('iPad')">iPad</a>
+    <a href="#" onclick="filtrarCategoria('MacBook')">MacBook</a>
+    <a href="#" onclick="filtrarCategoria('Caixa de som JBL')">Caixa de som JBL</a>
+    <a href="#" onclick="filtrarCategoria('Starlink')">Starlink</a>
+  </nav>
 
   <div class="container" id="produtos-container">
-    <!-- Os produtos serão inseridos aqui pelo JavaScript -->
+    <!-- Os produtos serão inseridos aqui pelo Firebase -->
   </div>
 
   <script>
-    const container = document.getElementById('produtos-container');
-    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_DOMINIO.firebaseapp.com",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_BUCKET.appspot.com",
+      messagingSenderId: "SEU_ID",
+      appId: "SUA_APP_ID"
+    };
 
-    if (produtos.length === 0) {
-      container.innerHTML = "<p>Nenhum produto disponível no momento.</p>";
-    } else {
-      produtos.forEach(produto => {
-        const div = document.createElement('div');
-        div.className = 'product';
-        div.innerHTML = `
-          <img src="${produto.imagem}" alt="${produto.nome}">
-          <h2>${produto.nome}</h2>
-          <p>${produto.descricao}</p>
-          <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(produto.mensagem)}" target="_blank">
-            Falar no WhatsApp
-          </a>
-        `;
-        container.appendChild(div);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const container = document.getElementById('produtos-container');
+
+    function carregarProdutos(categoria = null) {
+      container.innerHTML = "<p>Carregando produtos...</p>";
+      let query = db.collection("produtos");
+      if (categoria) {
+        query = query.where("categoria", "==", categoria);
+      }
+
+      query.get().then((querySnapshot) => {
+        container.innerHTML = "";
+        if (querySnapshot.empty) {
+          container.innerHTML = "<p>Nenhum produto disponível no momento.</p>";
+        } else {
+          querySnapshot.forEach((doc) => {
+            const produto = doc.data();
+            const div = document.createElement('div');
+            div.className = 'product';
+            div.innerHTML = `
+              <img src="${produto.imagem}" alt="${produto.nome}">
+              <h2>${produto.nome}</h2>
+              <p>${produto.descricao}</p>
+              <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(produto.mensagem)}" target="_blank">
+                Falar no WhatsApp
+              </a>
+            `;
+            container.appendChild(div);
+          });
+        }
       });
     }
+
+    function filtrarCategoria(categoria) {
+      carregarProdutos(categoria);
+    }
+
+    // Carrega todos os produtos inicialmente
+    carregarProdutos();
   </script>
 </body>
 </html>
