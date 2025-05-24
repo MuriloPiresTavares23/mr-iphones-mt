@@ -1,4 +1,6 @@
-// Firebase Configuração
+// produtos.js
+
+// Config Firebase
 const firebaseConfig = {
   apiKey: "SUA_API_KEY",
   authDomain: "SEU_DOMINIO.firebaseapp.com",
@@ -27,9 +29,8 @@ function adicionarProduto() {
 
   const imagemFile = imagemInput.files[0];
   const storageRef = storage.ref(`produtos/${Date.now()}_${imagemFile.name}`);
-  const uploadTask = storageRef.put(imagemFile);
-
-  uploadTask.then(snapshot => snapshot.ref.getDownloadURL())
+  
+  storageRef.put(imagemFile).then(snapshot => snapshot.ref.getDownloadURL())
     .then(url => {
       return db.collection("produtos").add({
         nome,
@@ -42,7 +43,6 @@ function adicionarProduto() {
     .then(() => {
       alert("Produto adicionado com sucesso!");
       limparFormulario();
-      carregarProdutos(); // se quiser recarregar a listagem no painel
     })
     .catch(error => {
       console.error("Erro ao adicionar produto: ", error);
@@ -50,7 +50,7 @@ function adicionarProduto() {
     });
 }
 
-// Carregar produtos para catálogo
+// Carregar Produtos
 function carregarProdutos(categoria = null, containerId = 'produtos-container') {
   const container = document.getElementById(containerId);
   container.innerHTML = "<p>Carregando produtos...</p>";
@@ -84,7 +84,7 @@ function carregarProdutos(categoria = null, containerId = 'produtos-container') 
   });
 }
 
-// Limpar formulário
+// Limpar Formulário
 function limparFormulario() {
   document.getElementById('nome').value = '';
   document.getElementById('descricao').value = '';
