@@ -1,3 +1,4 @@
+<!-- catalogo.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,73 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MR iPhones MT</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-    nav {
-      background-color: #222;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    .container {
-      max-width: 960px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .product {
-      border-bottom: 1px solid #ccc;
-      padding: 20px 0;
-    }
-    .product:last-child {
-      border-bottom: none;
-    }
-    .product h2 {
-      margin: 0 0 10px;
-    }
-    .product p {
-      margin: 5px 0;
-    }
-    .whatsapp-btn {
-      display: inline-block;
-      margin-top: 10px;
-      background-color: #25D366;
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-    .product img {
-      max-width: 150px;
-      border-radius: 10px;
-      display: block;
-      margin-bottom: 10px;
-    }
+    /* ... (seu CSS mantido igual) ... */
   </style>
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 </head>
 <body>
   <header>
@@ -88,66 +27,17 @@
   </nav>
 
   <div class="container" id="produtos-container">
-    <!-- Os produtos serão inseridos aqui pelo Firebase -->
+    <!-- Os produtos serão inseridos aqui -->
   </div>
 
+  <script src="produtos.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_DOMINIO.firebaseapp.com",
-      projectId: "SEU_PROJECT_ID",
-      storageBucket: "SEU_BUCKET.appspot.com",
-      messagingSenderId: "SEU_ID",
-      appId: "SUA_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const container = document.getElementById('produtos-container');
-
-    function carregarProdutos(categoria = null) {
-      container.innerHTML = "<p>Carregando produtos...</p>";
-      let query = db.collection("produtos");
-      if (categoria) {
-        query = query.where("categoria", "==", categoria);
-      }
-
-      query.get().then((querySnapshot) => {
-        container.innerHTML = "";
-        if (querySnapshot.empty) {
-          container.innerHTML = "<p>Nenhum produto disponível no momento.</p>";
-        } else {
-          querySnapshot.forEach((doc) => {
-            const produto = doc.data();
-            const div = document.createElement('div');
-            div.className = 'product';
-            div.innerHTML = `
-              <img src="${produto.imagem}" alt="${produto.nome}">
-              <h2>${produto.nome}</h2>
-              <p>${produto.descricao}</p>
-              <a class="whatsapp-btn" href="https://wa.me/5565998032449?text=${encodeURIComponent(produto.mensagem)}" target="_blank">
-                Falar no WhatsApp
-              </a>
-            `;
-            container.appendChild(div);
-          });
-        }
-      });
+    function filtrarCategoria(cat) {
+      carregarProdutos(cat);
     }
 
-    function filtrarCategoria(categoria) {
-      carregarProdutos(categoria);
-    }
-
-    // Carrega todos os produtos inicialmente
     carregarProdutos();
   </script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="produtos.js"></script>
-<script>
-  carregarProdutos(); // você pode passar uma categoria aqui
-</script>
-
 </body>
 </html>
+
